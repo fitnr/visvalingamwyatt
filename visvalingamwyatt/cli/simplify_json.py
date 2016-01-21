@@ -19,7 +19,7 @@ def simplify(inp, output, **kwargs):
         sink['features'] = []
 
         with open(output, 'w') as g:
-            for f in src:
+            for f in src['features']:
                 sink['features'].append(simplify_feature(f, **kwargs))
 
             json.dump(sink, g)
