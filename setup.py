@@ -8,7 +8,15 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 
-from setuptools import setup, find_packages
+from setuptools import setup
+
+try:
+    readme = open('README.rst').read()
+except IOError:
+    try:
+        readme = open('README.md').read()
+    except IOError:
+        readme = ''
 
 setup(
     name='visvalingamwyatt',
@@ -17,7 +25,7 @@ setup(
 
     description='Simplify geometries with the Visvalingam-Wyatt algorithm',
 
-    long_description='Simplify geometries with the Visvalingam-Wyatt algorithm',
+    long_description=readme,
 
     keywords='gis',
 
@@ -41,7 +49,7 @@ setup(
         'Operating System :: OS Independent',
     ],
 
-    packages=find_packages(),
+    packages=['visvalingamwyatt'],
 
     include_package_data=False,
 
