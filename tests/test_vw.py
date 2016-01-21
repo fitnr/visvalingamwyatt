@@ -8,8 +8,8 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 
-from unittest import TestCase as PythonTestCase
+import unittest
 
 
-class TestCase(PythonTestCase):
+class TestCase(unittest.TestCase):
     pass

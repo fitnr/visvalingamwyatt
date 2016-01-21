@@ -58,4 +58,8 @@ setup(
             'vwsimplify=visvalingamwyatt.cli:main',
         ],
     },
+
+    test_suite='tests',
+
+    use_2to3=True,
 )

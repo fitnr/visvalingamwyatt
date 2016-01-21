@@ -10,7 +10,7 @@ This implementation is due to [Eliot Hallmark](https://github.com/Permafacture/P
 >>> import visvalingamwyatt as vw
 >>> points = [(1, 2), (3, 4), ...]
 >>> vwsimplify = vw.VWSimplifier(points)
->>> vwsimplify.simplify(method='threshold', factor=0.90)
+>>> vwsimplify.simplify(method='ratio', factor=0.90)
 [(1, 2), (3, 4), ...]
 ```
 
@@ -27,6 +27,21 @@ geometry = {
 # factor (0.90)
 vw.simplify_geometry(geometry)
 ````
+
+The command line tools `vwsimplify` is available to simplify GeoJSON files:
+
+````
+# Simplify using a ratio of points
+vwsimplify --ratio 0.90 in.geojson -o simple.geojson
+
+# Simplify using the number of points to keep
+vwsimplify --number 1000 in.geojson -o simple.geojson
+
+# Simplify using a minimum area
+vwsimplify --threshold 0.001 in.geojson -o simple.geojson
+````
+
+Install [Fiona](https://github.com/Toblerity/Fiona) for the additional ability to simplify any geodata layer.
 
 ## License
 

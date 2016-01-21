@@ -191,7 +191,7 @@ class VWSimplifier(object):
         return real_areas
 
     def simplify(self, method=None, factor=None):
-        method = method or 'threshold'
+        method = method or 'ratio'
         factor = factor or 0.90
         if method in ('threshold', 'number', 'ratio'):
             return getattr(self, 'by_' + method)(factor)
@@ -208,7 +208,7 @@ class VWSimplifier(object):
         except IndexError:
             return self.pts
 
-        return self.pts[self.thresholds > threshold]
+        return self.by_threshold(threshold)
 
     def by_ratio(self, r):
         if r <= 0 or r > 1:
