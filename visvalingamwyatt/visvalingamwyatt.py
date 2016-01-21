@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from __future__ import unicode_literals
 import numpy as np
 
 '''
@@ -111,7 +110,7 @@ class Simplifier(object):
         '''
         nmax = len(self.pts)
         real_areas = triangle_areas_from_array(self.pts)
-        real_indices = range(nmax)
+        real_indices = list(range(nmax))
 
         # destructable copies
         # ARG! areas=real_areas[:] doesn't make a copy!
