@@ -180,13 +180,7 @@ class Simplifier(object):
             this_area = areas[min_vert]
             # areas = np.delete(areas,min_vert) #slower
             remove(areas, min_vert)  # faster
-            '''if sum(np.where(areas==np.inf)[0]) != sum(list(reversed(range(len(areas))))[:cntr]):
-             print "broke:",np.where(areas==np.inf)[0],cntr
-             break
-           cntr+=1
-           #if real_areas[0]<np.inf or real_areas[-1]<np.inf:
-           #  print "NO!", real_areas[0], real_areas[-1]
-           '''
+
         return real_areas
 
     def simplify(self, number=None, ratio=None, threshold=None):
@@ -220,30 +214,27 @@ class Simplifier(object):
 
 def simplify_geometry(geom, **kwargs):
     '''Simplify a GeoJSON-like geometry object.'''
+    g = dict(geom.items())
+
     if geom['type'] == 'MultiPolygon':
-        c = [simplify_rings(rings, **kwargs) for rings in geom['coordinates']]
+        g['coordinates'] = [simplify_rings(rings, **kwargs) for rings in geom['coordinates']]
 
     elif geom['type'] in ('Polygon', 'MultiLineString'):
-        c = simplify_rings(geom['coordinates'], **kwargs)
+        g['coordinates'] = simplify_rings(geom['coordinates'], **kwargs)
 
     elif geom['type'] in ('MultiPoint', 'LineString'):
-        c = simplify(geom['coordinates'], **kwargs)
+        g['coordinates'] = simplify(geom['coordinates'], **kwargs)
 
     elif geom['type'] == 'Point':
-        c = simplify(geom['coordinates'], **kwargs)
+        g['coordinates'] = simplify(geom['coordinates'], **kwargs)
 
     elif geom['type'] == 'GeometryCollection':
-        geom['geometries'] = [simplify_geometry(g, **kwargs) for g in geom['geometries']]
-        return geom
+        g['geometries'] = [simplify_geometry(g, **kwargs) for g in geom['geometries']]
 
     else:
         raise NotImplementedError("Unknown geometry type " + geom.get('type'))
 
-    return {
-        'type': geom['type'],
-        'coordinates': c
-    }
-
+    return g
 
 def simplify_rings(rings, **kwargs):
     return [simplify(ring, **kwargs) for ring in rings]
