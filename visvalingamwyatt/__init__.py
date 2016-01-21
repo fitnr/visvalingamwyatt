@@ -8,6 +8,7 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 
-__version__ = '0.1.0'
-
 from . import visvalingamwyatt
+from .visvalingamwyatt import Simplifier, simplify_geometry, simplify, simplify_feature
+
+__version__ = '0.1.0'

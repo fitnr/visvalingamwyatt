@@ -9,7 +9,7 @@
 
 import json
 from copy import copy
-from ..visvalingamwyatt import simplify_geometry
+from ..visvalingamwyatt import simplify_feature
 
 def simplify(inp, output, **kwargs):
     with open(inp, 'r') as f:
@@ -19,10 +19,8 @@ def simplify(inp, output, **kwargs):
         sink['features'] = []
 
         with open(output, 'w') as g:
-            for feature in src:
-                geom = simplify_geometry(feature['geometry'], **kwargs)
-                feature['geometry']['coordinates'] = geom['coordinates']
-                sink['features'].append(feature)
+            for f in src:
+                sink['features'].append(simplify_feature(f, **kwargs))
 
             json.dump(sink, g)
 

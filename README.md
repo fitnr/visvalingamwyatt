@@ -8,24 +8,44 @@ This implementation is due to [Eliot Hallmark](https://github.com/Permafacture/P
 
 ```python
 >>> import visvalingamwyatt as vw
->>> points = [(1, 2), (3, 4), ...]
->>> vwsimplify = vw.VWSimplifier(points)
->>> vwsimplify.simplify(method='ratio', factor=0.90)
+>>> points = [(1, 2), (2, 3), (3, 4), ...]
+>>> vw.simplify(points)
 [(1, 2), (3, 4), ...]
 ```
 
+Test different methods and thresholds:
+```python
+simplifier = vw.Simplifier(points)
+
+# Simplify by percentage of points to keep
+simplifier.simplify('ratio', 0.50)
+
+# Simplify by giving number of points to keep
+simplifier.simplify('number', 1000)
+
+# Simplify by giving an area threshold
+simplifier.simplify('threshold', 0.01)
+```
+
 Shorthands for working with geo data:
+
 ````python
 import visvalingamwyatt as vw
 
-geometry = {
-    "type": "Polygon",
-    "coordinates": [...]
+
+feature = {
+    "properties": {"foo": "bar"},
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [...]
+    }
 }
 
-# returns a copy of the geometry, simplified with the default method (threshold) and 
-# factor (0.90)
-vw.simplify_geometry(geometry)
+# returns a copy of the geometry, simplified (keeping 90% of points)
+vw.simplify_geometry(feature['geometry'], ratio=0.90)
+
+# returns a copy of the feature, simplified (using an area threshold)
+vw.simplify_feature(feature, threshold=0.90)
 ````
 
 The command line tools `vwsimplify` is available to simplify GeoJSON files:

@@ -93,7 +93,7 @@ def remove(s, i):
     s[i:-1] = s[i+1:]
 
 
-class VWSimplifier(object):
+class Simplifier(object):
 
     def __init__(self, pts):
         '''Initialize with points. takes some time to build
@@ -190,14 +190,16 @@ class VWSimplifier(object):
            '''
         return real_areas
 
-    def simplify(self, method=None, factor=None):
-        method = method or 'ratio'
-        factor = factor or 0.90
-        if method in ('threshold', 'number', 'ratio'):
-            return getattr(self, 'by_' + method)(factor)
+    def simplify(self, number=None, ratio=None, threshold=None):
+        if threshold is not None:
+            return self.by_threshold(threshold)
+
+        elif number is not None:
+            return self.by_number(number)
 
         else:
-            raise ValueError("Unknown method")
+            ratio = ratio or 0.90
+            return self.by_ratio(ratio)
 
     def by_threshold(self, threshold):
         return self.pts[self.thresholds >= threshold]
@@ -216,7 +218,9 @@ class VWSimplifier(object):
         else:
             return self.by_number(r*len(self.thresholds))
 
+
 def simplify_geometry(geom, **kwargs):
+    '''Simplify a GeoJSON-like geometry object.'''
     if geom['type'] == 'MultiPolygon':
         c = [simplify_rings(rings, **kwargs) for rings in geom['coordinates']]
 
@@ -241,16 +245,19 @@ def simplify_geometry(geom, **kwargs):
         'coordinates': c
     }
 
+
 def simplify_rings(rings, **kwargs):
     return [simplify(ring, **kwargs) for ring in rings]
 
-def simplify(coordinates, method, factor):
+
+def simplify(coordinates, number=None, ratio=None, threshold=None):
     '''Simplify a list of coordinates'''
-    return VWSimplifier(coordinates).simplify(method, factor).tolist()
+    return Simplifier(coordinates).simplify(number=number, ratio=ratio, threshold=threshold).tolist()
 
-def simplify_feature(feat, method, factor):
 
+def simplify_feature(feat, number=None, ratio=None, threshold=None):
+    '''Simplify the geometry of a GeoJSON-like feature.'''
     return {
         'properties': feat.get('properties'),
-        'geometry': simplify_geometry(feat['geometry'], method=method, factor=factor),
+        'geometry': simplify_geometry(feat['geometry'], number=number, ratio=ratio, threshold=threshold),
     }

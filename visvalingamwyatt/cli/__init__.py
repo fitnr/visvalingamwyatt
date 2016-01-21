@@ -30,23 +30,16 @@ def main():
     if args.output == '-':
         args.output = '/dev/stdout'
 
+    kwargs = {}
+
     if args.number:
-        kwargs = {
-            'method': 'number',
-            'factor': args.number
-        }
+        kwargs['number'] = args.number
 
     elif args.threshold:
-        kwargs = {
-            'method': 'threshold',
-            'factor': args.threshold
-        }
+        kwargs['threshold'] = args.threshold
 
     else:
-        kwargs = {
-            'method': 'ratio',
-            'factor': args.ratio or 0.90
-        }
+        kwargs['ratio'] = args.ratio or 0.90
 
     simplify(args.input, args.output, **kwargs)
 
