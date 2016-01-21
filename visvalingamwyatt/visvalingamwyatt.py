@@ -216,16 +216,17 @@ def simplify_geometry(geom, **kwargs):
     '''Simplify a GeoJSON-like geometry object.'''
     g = dict(geom.items())
 
-    if geom['type'] == 'MultiPolygon':
+    # Ignore point geometries
+    if geom['type'] in ('Point', 'MultiPoint'):
+        pass
+
+    elif geom['type'] == 'MultiPolygon':
         g['coordinates'] = [simplify_rings(rings, **kwargs) for rings in geom['coordinates']]
 
     elif geom['type'] in ('Polygon', 'MultiLineString'):
         g['coordinates'] = simplify_rings(geom['coordinates'], **kwargs)
 
-    elif geom['type'] in ('MultiPoint', 'LineString'):
-        g['coordinates'] = simplify(geom['coordinates'], **kwargs)
-
-    elif geom['type'] == 'Point':
+    elif geom['type'] == 'LineString':
         g['coordinates'] = simplify(geom['coordinates'], **kwargs)
 
     elif geom['type'] == 'GeometryCollection':
@@ -235,6 +236,7 @@ def simplify_geometry(geom, **kwargs):
         raise NotImplementedError("Unknown geometry type " + geom.get('type'))
 
     return g
+
 
 def simplify_rings(rings, **kwargs):
     return [simplify(ring, **kwargs) for ring in rings]
