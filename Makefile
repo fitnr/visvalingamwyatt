@@ -5,6 +5,8 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 
+QUIET = -q
+
 README.rst: README.md
 	- pandoc $< -o $@
 	@touch $@
@@ -14,8 +16,13 @@ README.rst: README.md
 install: README.rst
 	python setup.py install
 
+cov:
+	- coverage run --include='visvalingamwyatt/*' setup.py $(QUIET) test
+	coverage report
+	coverage html
+
 test: README.rst
-	python setup.py install	
+	python setup.py test	
 	
 upload: README.rst | clean
 	python setup.py register
