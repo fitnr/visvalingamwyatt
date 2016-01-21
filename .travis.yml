@@ -1,0 +1,19 @@
+# This file is part of visvalingamwyatt.
+# https://github.com/fitnr/visvalingamwyatt
+
+# Licensed under the MIT license:
+# http://www.opensource.org/licenses/MIT-license
+# Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
+
+language: python
+
+python:
+    - 2.7
+    - 3.4
+    - pypy
+
+install:
+    - make install
+
+script:
+    - python setup.py test
