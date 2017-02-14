@@ -8,6 +8,7 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 import json
+import numpy as np
 import unittest
 import visvalingamwyatt as vw
 from visvalingamwyatt import cli
@@ -55,3 +56,44 @@ class TestCase(unittest.TestCase):
         a = vw.simplify(coordinates)
         assert a[0] == [0, 0, 0]
         assert len(a) <= len(coordinates)
+
+    def testSimplifyTupleLike(self):
+        class Point(object):
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+            def __iter__(self):
+                yield self.x
+                yield self.y
+
+        # coordinates are in the shape
+        #
+        #     c
+        #   b  d
+        #  a    e
+        #
+        # so b and d are eliminated
+
+        a, b, c, d, e = Point(0, 0), Point(1, 1), Point(2, 2), Point(3, 1), Point(4, 0)
+        input = [a, b, c, d, e]
+        expected_output = np.array([a, c, e])
+
+        actual_output = vw.simplify(input, threshold=0.001)
+        assert np.array_equal(actual_output, expected_output)
+
+    def testSimplifyIntegerCoords(self):
+        # coordinates are in the shape
+        #
+        #     c
+        #   b  d
+        #  a    e
+        #
+        # so b and d are eliminated
+
+        a, b, c, d, e = (0, 0), (1, 1), (2, 2), (3, 1), (4, 0)
+        input = [a, b, c, d, e]
+        expected_output = np.array([a, c, e])
+
+        actual_output = vw.simplify(input, threshold=0.001)
+        assert np.array_equal(actual_output, expected_output)
