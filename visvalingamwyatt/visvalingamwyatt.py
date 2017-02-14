@@ -98,7 +98,8 @@ class Simplifier(object):
         '''Initialize with points. takes some time to build
         the thresholds but then all threshold filtering later
         is ultra fast'''
-        self.pts = np.array(pts)
+        self.pts_in = np.array(pts)
+        self.pts = np.array([tuple(map(float, pt)) for pt in pts])
         self.thresholds = self.build_thresholds()
         self.ordered_thresholds = sorted(self.thresholds, reverse=True)
 
@@ -195,13 +196,13 @@ class Simplifier(object):
             return self.by_ratio(ratio)
 
     def by_threshold(self, threshold):
-        return self.pts[self.thresholds >= threshold]
+        return self.pts_in[self.thresholds >= threshold]
 
     def by_number(self, n):
         try:
             threshold = self.ordered_thresholds[int(n)]
         except IndexError:
-            return self.pts
+            return self.pts_in
 
         return self.by_threshold(threshold)
 
