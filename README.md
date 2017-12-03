@@ -18,13 +18,13 @@ Test different methods and thresholds:
 simplifier = vw.Simplifier(points)
 
 # Simplify by percentage of points to keep
-simplifier.simplify('ratio', 0.50)
+simplifier.simplify(ratio=0.5)
 
 # Simplify by giving number of points to keep
-simplifier.simplify('number', 1000)
+simplifier.simplify(number=1000)
 
 # Simplify by giving an area threshold
-simplifier.simplify('threshold', 0.01)
+simplifier.simplify(threshold=0.01)
 ```
 
 Shorthands for working with geo data:
