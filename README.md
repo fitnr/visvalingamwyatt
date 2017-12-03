@@ -13,6 +13,8 @@ This implementation is due to [Eliot Hallmark](https://github.com/Permafacture/P
 [(1, 2), (3, 4), ...]
 ```
 
+Points may be any `Sequence`-like object that (`list`, `tuple`, a custom class that exposes an `__iter__` method).
+
 Test different methods and thresholds:
 ```python
 simplifier = vw.Simplifier(points)
@@ -27,11 +29,10 @@ simplifier.simplify(number=1000)
 simplifier.simplify(threshold=0.01)
 ```
 
-Shorthands for working with geo data:
+Shorthands for working with geodata:
 
 ````python
 import visvalingamwyatt as vw
-
 
 feature = {
     "properties": {"foo": "bar"},
@@ -48,7 +49,7 @@ vw.simplify_geometry(feature['geometry'], ratio=0.90)
 vw.simplify_feature(feature, threshold=0.90)
 ````
 
-The command line tools `vwsimplify` is available to simplify GeoJSON files:
+The command line tool `vwsimplify` is available to simplify GeoJSON files:
 
 ````
 # Simplify using a ratio of points
