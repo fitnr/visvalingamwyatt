@@ -63,7 +63,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'vwsimplify=visvalingamwyatt.cli:main',
+            'vwsimplify=visvalingamwyatt.__main__:main',
         ],
     },
 

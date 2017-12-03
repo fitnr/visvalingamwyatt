@@ -11,7 +11,7 @@ import json
 import numpy as np
 import unittest
 import visvalingamwyatt as vw
-from visvalingamwyatt import cli
+
 
 class TestCase(unittest.TestCase):
     def setUp(self):
