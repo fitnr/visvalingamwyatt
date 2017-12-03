@@ -3,17 +3,14 @@
 
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
+# Copyright (c) 2015, 2017, fitnr <contact@fakeisthenewreal.org>
 
 import argparse
-try:
-    from .simplify_fiona import simplify
-except ImportError:
-    from .simplify_json import simplify
+from .simplify import simplify
 
 def main():
-    parser = argparse.ArgumentParser('simplify', description='Simplify geospatial using with the Visvalingam-Wyatt algorithm.')
-    parser.add_argument('input', default='/dev/stdin')
+    parser = argparse.ArgumentParser('simplify', description='Simplify geospatial data using with the Visvalingam-Wyatt algorithm')
+    parser.add_argument('input', default='/dev/stdin', help='geodata file')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-t', '--threshold', type=float, metavar='float')
