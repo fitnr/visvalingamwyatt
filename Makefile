@@ -10,9 +10,9 @@ QUIET = -q
 README.rst: README.md
 	- pandoc $< -o $@
 	@touch $@
-	python setup.py check --restructuredtext --strict
+	- python setup.py check --restructuredtext --strict
 
-.PHONY: install test upload
+.PHONY: install test upload build
 install: README.rst
 	python setup.py install
 
@@ -24,12 +24,12 @@ cov:
 test: README.rst
 	python setup.py test	
 	
-upload: README.rst | clean
-	python setup.py register
-	python setup.py bdist_wheel
-	python3 setup.py bdist_wheel
+upload: README.rst | clean build
+	twine register
 	twine upload dist/*
 	git push
 	git push --tags
+
+build: ; python3 setup.py sdist bdist_wheel --universal
 
 clean: ; rm -rf dist
