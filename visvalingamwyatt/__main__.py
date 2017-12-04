@@ -5,7 +5,6 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, 2017, fitnr <contact@fakeisthenewreal.org>
 
-from copy import copy
 import json
 import argparse
 from .visvalingamwyatt import simplify_feature
@@ -32,16 +31,11 @@ except ImportError:
 
     def simplify(inp, output, **kwargs):
         with open(inp, 'r') as f:
-            src = json.load(f)
-
-            sink = copy(src)
-            sink['features'] = []
+            geojson = json.load(f)
 
             with open(output, 'w') as g:
-                for f in src['features']:
-                    sink['features'].append(simplify_feature(f, **kwargs))
-
-                json.dump(sink, g)
+                geojson['features'] = [simplify_feature(f, **kwargs) for f in geojson['features']]
+                json.dump(geojson, g)
 
 
 def main():
