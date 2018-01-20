@@ -199,12 +199,16 @@ class Simplifier(object):
         return self.pts_in[self.thresholds >= threshold]
 
     def by_number(self, n):
+        n = int(n)
         try:
-            threshold = self.ordered_thresholds[int(n)]
+            threshold = self.ordered_thresholds[n]
         except IndexError:
             return self.pts_in
 
-        return self.by_threshold(threshold)
+        # return the first n points since by_threshold
+        # could return more points if the threshold is the same
+        # for some points
+        return self.by_threshold(threshold)[:n]
 
     def by_ratio(self, r):
         if r <= 0 or r > 1:

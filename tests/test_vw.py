@@ -51,7 +51,8 @@ class TestCase(unittest.TestCase):
             assert len(r['geometry']['coordinates']) <= len(s['geometry']['coordinates'])
 
     def testSimplifyFeatureNumber(self):
-        self.standard(number=10)
+        result = self.standard(number=10)
+        self.assertEqual(len(result['geometry']['coordinates']), 10)
 
     def test3dCoords(self):
         coordinates = [[0.0, 0.0, 0.0], [1.1, 0, 1], [2.1, 3, 0], [4.1, 5, 10], [1.1, 2, 0], [5.1, 2, 0]]
@@ -106,7 +107,7 @@ class TestCase(unittest.TestCase):
             with open('tmp.json', 'r') as f:
                 result = json.load(f)
                 coords = result['features'][0]['geometry']['coordinates']
-                self.assertEqual(len(coords), 10)
+                self.assertEqual(len(coords), 9)
 
         finally:
             os.remove(output)
