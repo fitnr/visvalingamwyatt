@@ -21,7 +21,7 @@ except IOError:
 setup(
     name='visvalingamwyatt',
 
-    version='0.1.2',
+    version='0.1.3',
 
     description='Simplify geometries with the Visvalingam-Wyatt algorithm',
 
@@ -43,10 +43,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: Unix',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Operating System :: OS Independent',
     ],
