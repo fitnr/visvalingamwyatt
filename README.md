@@ -25,7 +25,7 @@ simplifier.simplify(ratio=0.5)
 # Simplify by giving number of points to keep
 simplifier.simplify(number=1000)
 
-# Simplify by giving an area threshold
+# Simplify by giving an area threshold (in the units of the data)
 simplifier.simplify(threshold=0.01)
 ```
 
