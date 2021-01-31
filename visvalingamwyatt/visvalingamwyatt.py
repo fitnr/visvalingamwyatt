@@ -226,9 +226,12 @@ def simplify_geometry(geom, **kwargs):
         pass
 
     elif geom['type'] == 'MultiPolygon':
-        g['coordinates'] = [simplify_rings(rings, **kwargs) for rings in geom['coordinates']]
+        g['coordinates'] = [simplify_rings(rings, closed=True, **kwargs) for rings in geom['coordinates']]
 
-    elif geom['type'] in ('Polygon', 'MultiLineString'):
+    elif geom['type'] == 'Polygon':
+        g['coordinates'] = simplify_rings(geom['coordinates'], closed=True, **kwargs)
+
+    elif geom['type'] == 'MultiLineString':
         g['coordinates'] = simplify_rings(geom['coordinates'], **kwargs)
 
     elif geom['type'] == 'LineString':
@@ -247,9 +250,12 @@ def simplify_rings(rings, **kwargs):
     return [simplify(ring, **kwargs) for ring in rings]
 
 
-def simplify(coordinates, number=None, ratio=None, threshold=None):
+def simplify(coordinates, number=None, ratio=None, threshold=None, closed=False):
     '''Simplify a list of coordinates'''
-    return Simplifier(coordinates).simplify(number=number, ratio=ratio, threshold=threshold).tolist()
+    result = Simplifier(coordinates).simplify(number=number, ratio=ratio, threshold=threshold).tolist()
+    if closed:
+        result[-1] = result[0]
+    return result 
 
 
 def simplify_feature(feat, number=None, ratio=None, threshold=None):
