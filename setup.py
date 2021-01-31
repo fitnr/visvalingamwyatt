@@ -21,7 +21,7 @@ except IOError:
 setup(
     name='visvalingamwyatt',
 
-    version='0.1.3',
+    version='0.1.4',
 
     description='Simplify geometries with the Visvalingam-Wyatt algorithm',
 
