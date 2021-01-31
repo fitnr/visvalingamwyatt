@@ -21,8 +21,8 @@ cov:
 	coverage report
 	coverage html
 
-test: README.rst
-	python setup.py test	
+test:
+	tox
 	
 upload: README.rst | clean build
 	twine upload dist/*
