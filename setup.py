@@ -10,24 +10,18 @@
 
 from setuptools import setup
 
-try:
-    readme = open('README.rst').read()
-except IOError:
-    try:
-        readme = open('README.md').read()
-    except IOError:
-        readme = ''
+readme = open('README.md').read()
 
 setup(
     name='visvalingamwyatt',
 
-    version='0.1.3',
+    version='0.1.4',
 
     description='Simplify geometries with the Visvalingam-Wyatt algorithm',
 
     long_description=readme,
 
-    keywords='gis',
+    long_description_content_type='text/markdown',
 
     author='fitnr',
 

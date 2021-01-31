@@ -3,28 +3,22 @@
 
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
+# Copyright (c) 2015, 2021, fitnr <contact@fakeisthenewreal.org>
 
-QUIET = -q
+.PHONY: install test upload build cov
 
-README.rst: README.md
-	- pandoc $< -o $@
-	@touch $@
-	- python setup.py check --restructuredtext --strict
-
-.PHONY: install test upload build
-install: README.rst
+install:
 	python setup.py install
 
 cov:
-	- coverage run --include='visvalingamwyatt/*' setup.py $(QUIET) test
+	- coverage run --include='visvalingamwyatt/*' -m unittest
 	coverage report
 	coverage html
 
 test:
 	tox
 	
-upload: README.rst | clean build
+upload: | clean build
 	twine upload dist/*
 	git push
 	git push --tags
