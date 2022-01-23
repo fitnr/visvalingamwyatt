@@ -18,4 +18,4 @@ source: https://github.com/Permafacture/Py-Visvalingam-Whyatt/
 from . import visvalingamwyatt
 from .visvalingamwyatt import Simplifier, simplify, simplify_feature, simplify_geometry
 
-__version__ = '0.1.4'
+__version__ = '0.2.0'
