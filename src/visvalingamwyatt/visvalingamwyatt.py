@@ -19,9 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-import numpy as np
-
 '''
 Visvalingam-Whyatt method of poly-line vertex reduction
 
@@ -33,13 +30,17 @@ http://web.archive.org/web/20100428020453/http://www2.dcs.hull.ac.uk/CISRG/publi
 
 source: https://github.com/Permafacture/Py-Visvalingam-Whyatt/
 '''
+import numpy as np
 
 
 def triangle_area(p1, p2, p3):
     """
     calculates the area of a triangle given its vertices
     """
-    return abs(p1[0]*(p2[1]-p3[1])+p2[0]*(p3[1]-p1[1])+p3[0]*(p1[1]-p2[1]))/2.
+    return (
+        abs(p1[0] * (p2[1] - p3[1]) + p2[0] * (p3[1] - p1[1]) + p3[0] * (p1[1] - p2[1]))
+        / 2.0
+    )
 
 
 def triangle_areas_from_array(arr):
@@ -72,9 +73,10 @@ def triangle_areas_from_array(arr):
     np.multiply(p3[:, 0], acc1, out=acc1)
     np.add(acc1, accr, out=accr)
     np.abs(accr, out=accr)
-    accr /= 2.
+    accr /= 2.0
     # Notice: accr was writing into result, so the answer is in there
     return result
+
 
 # the final value in thresholds is np.inf, which will never be
 # the min value.  So, I am safe in "deleting" an index by
@@ -89,11 +91,10 @@ def remove(s, i):
 
     ~3.5x faster than numpy.delete
     '''
-    s[i:-1] = s[i+1:]
+    s[i:-1] = s[i + 1 :]
 
 
 class Simplifier(object):
-
     def __init__(self, pts):
         '''Initialize with points. takes some time to build
         the thresholds but then all threshold filtering later
@@ -126,7 +127,7 @@ class Simplifier(object):
         # areas = np.delete(areas,min_vert) #slower
         _ = i.pop(min_vert)
 
-        #cntr = 3
+        # cntr = 3
         while this_area < np.inf:
             '''min_vert was removed from areas and i.  Now,
             adjust the adjacent areas and remove the new
@@ -138,8 +139,11 @@ class Simplifier(object):
             skip = False  # modified area may be the next minvert
 
             try:
-                right_area = triangle_area(self.pts[i[min_vert-1]],
-                                           self.pts[i[min_vert]], self.pts[i[min_vert+1]])
+                right_area = triangle_area(
+                    self.pts[i[min_vert - 1]],
+                    self.pts[i[min_vert]],
+                    self.pts[i[min_vert + 1]],
+                )
             except IndexError:
                 # trying to update area of endpoint. Don't do it
                 pass
@@ -164,14 +168,17 @@ class Simplifier(object):
 
             if min_vert > 1:
                 # cant try/except because 0-1=-1 is a valid index
-                left_area = triangle_area(self.pts[i[min_vert-2]],
-                                          self.pts[i[min_vert-1]], self.pts[i[min_vert]])
+                left_area = triangle_area(
+                    self.pts[i[min_vert - 2]],
+                    self.pts[i[min_vert - 1]],
+                    self.pts[i[min_vert]],
+                )
                 if left_area <= this_area:
                     # same justification as above
                     left_area = this_area
-                    skip = min_vert-1
-                real_areas[i[min_vert-1]] = left_area
-                areas[min_vert-1] = left_area
+                    skip = min_vert - 1
+                real_areas[i[min_vert - 1]] = left_area
+                areas[min_vert - 1] = left_area
 
             # only argmin if we have too.
             min_vert = skip or np.argmin(areas)
@@ -214,7 +221,7 @@ class Simplifier(object):
         if r <= 0 or r > 1:
             raise ValueError("Ratio must be 0<r<=1. Got {}".format(r))
         else:
-            return self.by_number(r*len(self.thresholds))
+            return self.by_number(r * len(self.thresholds))
 
 
 def simplify_geometry(geom, **kwargs):
@@ -226,7 +233,10 @@ def simplify_geometry(geom, **kwargs):
         pass
 
     elif geom['type'] == 'MultiPolygon':
-        g['coordinates'] = [simplify_rings(rings, closed=True, **kwargs) for rings in geom['coordinates']]
+        g['coordinates'] = [
+            simplify_rings(rings, closed=True, **kwargs)
+            for rings in geom['coordinates']
+        ]
 
     elif geom['type'] == 'Polygon':
         g['coordinates'] = simplify_rings(geom['coordinates'], closed=True, **kwargs)
@@ -252,15 +262,21 @@ def simplify_rings(rings, **kwargs):
 
 def simplify(coordinates, number=None, ratio=None, threshold=None, closed=False):
     '''Simplify a list of coordinates'''
-    result = Simplifier(coordinates).simplify(number=number, ratio=ratio, threshold=threshold).tolist()
+    result = (
+        Simplifier(coordinates)
+        .simplify(number=number, ratio=ratio, threshold=threshold)
+        .tolist()
+    )
     if closed:
         result[-1] = result[0]
-    return result 
+    return result
 
 
 def simplify_feature(feat, number=None, ratio=None, threshold=None):
     '''Simplify the geometry of a GeoJSON-like feature.'''
     return {
         'properties': feat.get('properties'),
-        'geometry': simplify_geometry(feat['geometry'], number=number, ratio=ratio, threshold=threshold),
+        'geometry': simplify_geometry(
+            feat['geometry'], number=number, ratio=ratio, threshold=threshold
+        ),
     }

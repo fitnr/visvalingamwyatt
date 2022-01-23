@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # This file is part of visvalingamwyatt.
@@ -9,6 +8,6 @@
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
 
 from . import visvalingamwyatt
-from .visvalingamwyatt import Simplifier, simplify_geometry, simplify, simplify_feature
+from .visvalingamwyatt import Simplifier, simplify, simplify_feature, simplify_geometry
 
 __version__ = '0.1.4'

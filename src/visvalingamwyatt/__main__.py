@@ -5,9 +5,11 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, 2017, fitnr <contact@fakeisthenewreal.org>
 
-import json
 import argparse
+import json
+
 from .visvalingamwyatt import simplify_feature
+
 try:
     import fiona
 
@@ -22,7 +24,9 @@ try:
 
         with fiona.drivers():
             with fiona.open(inp, 'r') as src:
-                with fiona.open(output, 'w', schema=src.schema, driver=src.driver, crs=src.crs) as sink:
+                with fiona.open(
+                    output, 'w', schema=src.schema, driver=src.driver, crs=src.crs
+                ) as sink:
                     for f in src:
                         sink.write(simplify_feature(f, **kwargs))
 
@@ -34,18 +38,33 @@ except ImportError:
             geojson = json.load(f)
 
             with open(output, 'w') as g:
-                geojson['features'] = [simplify_feature(f, **kwargs) for f in geojson['features']]
+                geojson['features'] = [
+                    simplify_feature(f, **kwargs) for f in geojson['features']
+                ]
                 json.dump(geojson, g)
 
 
 def main():
-    parser = argparse.ArgumentParser('simplify', description='Simplify geospatial data using with the Visvalingam-Wyatt algorithm')
+    parser = argparse.ArgumentParser(
+        'simplify',
+        description='Simplify geospatial data using with the Visvalingam-Wyatt algorithm',
+    )
     parser.add_argument('input', default='/dev/stdin', help=inputhelp)
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-t', '--threshold', type=float, metavar='float', help='minimum area')
-    group.add_argument('-n', '--number', type=int, metavar='int', help='number of points to keep')
-    group.add_argument('-r', '--ratio', type=float, metavar='float', help='fraction of points to keep (default: 0.90)')
+    group.add_argument(
+        '-t', '--threshold', type=float, metavar='float', help='minimum area'
+    )
+    group.add_argument(
+        '-n', '--number', type=int, metavar='int', help='number of points to keep'
+    )
+    group.add_argument(
+        '-r',
+        '--ratio',
+        type=float,
+        metavar='float',
+        help='fraction of points to keep (default: 0.90)',
+    )
 
     parser.add_argument('-o', '--output', metavar='file', default='/dev/stdout')
 
@@ -69,6 +88,7 @@ def main():
         kwargs['ratio'] = args.ratio or 0.90
 
     simplify(args.input, args.output, **kwargs)
+
 
 if __name__ == '__main__':
     main()
