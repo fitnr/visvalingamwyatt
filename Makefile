@@ -5,24 +5,22 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, 2021, fitnr <contact@fakeisthenewreal.org>
 
-.PHONY: install test upload build cov
+.PHONY: install test publish build clean cov
 
 install:
 	python setup.py install
 
 cov:
-	- coverage run --include='visvalingamwyatt/*' -m unittest
+	-coverage run --branch --source visvalingamwyatt -m unittest
 	coverage report
-	coverage html
 
 test:
-	tox
+	python -m unittest
 	
-upload: | clean build
+publish: build
 	twine upload dist/*
-	git push
-	git push --tags
 
-build: ; python3 setup.py sdist bdist_wheel --universal
+build: | clean
+	python -m build
 
-clean: ; rm -rf dist
+clean:; rm -rf dist build

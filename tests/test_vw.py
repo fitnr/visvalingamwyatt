@@ -201,3 +201,6 @@ class TestCase(unittest.TestCase):
 
         finally:
             os.remove(output)
+
+if __name__ == '__main__':
+    unittest.main()
