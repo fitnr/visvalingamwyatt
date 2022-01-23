@@ -94,7 +94,10 @@ def remove(s, i):
     s[i:-1] = s[i + 1 :]
 
 
-class Simplifier(object):
+class Simplifier:
+
+    """Performs VW simplification on lists of points"""
+
     def __init__(self, pts):
         '''Initialize with points. takes some time to build
         the thresholds but then all threshold filtering later
@@ -129,12 +132,10 @@ class Simplifier(object):
 
         # cntr = 3
         while this_area < np.inf:
-            '''min_vert was removed from areas and i.  Now,
-            adjust the adjacent areas and remove the new
-            min_vert.
-
-            Now that min_vert was filtered out, min_vert points
-            to the point after the deleted point.'''
+            # min_vert was removed from areas and i.
+            # Now, adjust the adjacent areas and remove the new min_vert.
+            # Now that min_vert was filtered out, min_vert points
+            # to the point after the deleted point.
 
             skip = False  # modified area may be the next minvert
 
@@ -195,12 +196,11 @@ class Simplifier(object):
         if threshold is not None:
             return self.by_threshold(threshold)
 
-        elif number is not None:
+        if number is not None:
             return self.by_number(number)
 
-        else:
-            ratio = ratio or 0.90
-            return self.by_ratio(ratio)
+        ratio = ratio or 0.90
+        return self.by_ratio(ratio)
 
     def by_threshold(self, threshold):
         return self.pts_in[self.thresholds >= threshold]
@@ -220,8 +220,8 @@ class Simplifier(object):
     def by_ratio(self, r):
         if r <= 0 or r > 1:
             raise ValueError("Ratio must be 0<r<=1. Got {}".format(r))
-        else:
-            return self.by_number(r * len(self.thresholds))
+
+        return self.by_number(r * len(self.thresholds))
 
 
 def simplify_geometry(geom, **kwargs):
@@ -257,6 +257,7 @@ def simplify_geometry(geom, **kwargs):
 
 
 def simplify_rings(rings, **kwargs):
+    """Simplify rings (lists lists of coordinates)"""
     return [simplify(ring, **kwargs) for ring in rings]
 
 

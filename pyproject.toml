@@ -12,3 +12,10 @@ target-version = [
 	"py39",
 	"py310",
 	]
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = ["C0103"]
+max-line-length = 100
+
+[tool.isort]
+profile = "black"

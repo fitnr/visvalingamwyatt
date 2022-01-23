@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-
 # This file is part of visvalingamwyatt.
 # https://github.com/fitnr/visvalingamwyatt
-
-import json
-
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2015, fitnr <contact@fakeisthenewreal.org>
+"""visvalingamwyatt module tests"""
+import json
 import os
 import unittest
 from collections import namedtuple
@@ -18,7 +16,7 @@ import visvalingamwyatt as vw
 from visvalingamwyatt import __main__ as cli
 
 
-class TestCase(unittest.TestCase):
+class TestVW(unittest.TestCase):
     def setUp(self):
         self.samplefile = os.path.join(os.path.dirname(__file__), 'data', 'sample.json')
         with open(self.samplefile) as f:
