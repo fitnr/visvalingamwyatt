@@ -37,20 +37,16 @@ def triangle_area(p1, p2, p3):
     """
     calculates the area of a triangle given its vertices
     """
-    return (
-        abs(p1[0] * (p2[1] - p3[1]) + p2[0] * (p3[1] - p1[1]) + p3[0] * (p1[1] - p2[1]))
-        / 2.0
-    )
+    return np.linalg.norm(np.cross(p2 - p1, p3 - p1)) / 2
 
 
 def triangle_areas_from_array(arr):
-    '''
-    take an (N,2) array of points and return an (N,1)
+    """
+    take an (N,2) or (N,3) array of points and return an (N,1)
     array of the areas of those triangles, where the first
     and last areas are np.inf
-
     see triangle_area for algorithm
-    '''
+    """
 
     result = np.empty((len(arr),), arr.dtype)
     result[0] = np.inf
@@ -60,21 +56,13 @@ def triangle_areas_from_array(arr):
     p2 = arr[1:-1]
     p3 = arr[2:]
 
-    # an accumulators to avoid unnecessary intermediate arrays
-    accr = result[1:-1]  # Accumulate directly into result
-    acc1 = np.empty_like(accr)
+    area = np.cross(p2 - p1, p3 - p1, axis=1)
+    if len(area.shape) > 1:
+        area = np.linalg.norm(area, axis=1) / 2
+    else:
+        area = np.abs(area) / 2
 
-    np.subtract(p2[:, 1], p3[:, 1], out=accr)
-    np.multiply(p1[:, 0], accr, out=accr)
-    np.subtract(p3[:, 1], p1[:, 1], out=acc1)
-    np.multiply(p2[:, 0], acc1, out=acc1)
-    np.add(acc1, accr, out=accr)
-    np.subtract(p1[:, 1], p2[:, 1], out=acc1)
-    np.multiply(p3[:, 0], acc1, out=acc1)
-    np.add(acc1, accr, out=accr)
-    np.abs(accr, out=accr)
-    accr /= 2.0
-    # Notice: accr was writing into result, so the answer is in there
+    result[1:-1] = area
     return result
 
 
@@ -84,13 +72,13 @@ def triangle_areas_from_array(arr):
 
 
 def remove(s, i):
-    '''
+    """
     Quick trick to remove an item from a numpy array without
     creating a new object.  Rather than the array shape changing,
     the final value just gets repeated to fill the space.
 
     ~3.5x faster than numpy.delete
-    '''
+    """
     s[i:-1] = s[i + 1 :]
 
 
@@ -99,20 +87,20 @@ class Simplifier:
     """Performs VW simplification on lists of points"""
 
     def __init__(self, pts):
-        '''Initialize with points. takes some time to build
+        """Initialize with points. takes some time to build
         the thresholds but then all threshold filtering later
-        is ultra fast'''
+        is ultra fast"""
         self.pts_in = np.array(pts)
         self.pts = np.array([tuple(map(float, pt)) for pt in pts])
         self.thresholds = self.build_thresholds()
         self.ordered_thresholds = sorted(self.thresholds, reverse=True)
 
     def build_thresholds(self):
-        '''compute the area value of each vertex, which one would
+        """compute the area value of each vertex, which one would
         use to mask an array of points for any threshold value.
 
         returns a numpy.array (length of pts)  of the areas.
-        '''
+        """
         nmax = len(self.pts)
         real_areas = triangle_areas_from_array(self.pts)
         real_indices = list(range(nmax))
