@@ -215,7 +215,18 @@ class Simplifier:
         # return the first n points since by_threshold
         # could return more points if the threshold is the same
         # for some points
-        return self.by_threshold(threshold)[:n]
+
+        # sort point indices by threshold
+        idx = list(range(len(self.pts)))
+        sorted_indices = sorted(zip(idx, self.thresholds), reverse=True, key=lambda x: x[1])
+
+        # grab first n indices
+        sorted_indices = sorted_indices[:n]
+
+        # re-sort by index
+        final_indices = sorted( [x[0] for x in sorted_indices] )
+
+        return self.pts[final_indices]
 
     def by_ratio(self, r):
         if r <= 0 or r > 1:
