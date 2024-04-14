@@ -103,7 +103,7 @@ class Simplifier:
         the thresholds but then all threshold filtering later
         is ultra fast'''
         self.pts_in = np.array(pts)
-        self.pts = np.array([tuple(map(float, pt)) for pt in pts])
+        self.pts = self.pts_in.astype(float)
         self.thresholds = self.build_thresholds()
         self.ordered_thresholds = sorted(self.thresholds, reverse=True)
 
