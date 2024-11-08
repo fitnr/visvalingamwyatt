@@ -8,9 +8,10 @@ build-backend = 'setuptools.build_meta'
 max-line-length = 100
 skip-string-normalization = true
 target-version = [
-	"py38",
 	"py39",
 	"py310",
+	"py311",
+	"py312",
 	]
 
 [tool.pylint."MESSAGES CONTROL"]
