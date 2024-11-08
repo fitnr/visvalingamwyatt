@@ -4,16 +4,16 @@ name: Publish to PyPi
 
 on:
   release:
-    types: [created]
+    types: [created, workflow_dispatch]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v4.2.2
+        uses: actions/setup-python@v2
         with:
           python-version: "3.11"
           cache: 'pip'
@@ -27,7 +27,7 @@ jobs:
       - run: make build
 
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1.12.2
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
